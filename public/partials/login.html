@@ -1,0 +1,51 @@
+<div class="well well-lg" ng-controller="login_controller">
+
+    <!--<table class="center-block">
+        <tr>
+            <h2> Login:</h2>
+        </tr>
+        <tr>
+            <td>
+                Facebook:
+            </td>
+            <td>
+                <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false">
+
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Gmail:
+            </td>
+            <td>
+                <button type="button" class="btn btn-default btn-lg active">Gmail</button>
+            </td>
+        </tr>
+    </table>-->
+    <form class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        Or, Login in with Facebook:
+        <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false">
+    </form>
+</div>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=547736678679468";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>

@@ -1,0 +1,41 @@
+<!-- Decorative tags: http://mbenford.github.io/ngTagsInput/demos.html -->
+
+
+<form class="form-horizontal">
+    <div class="form-group">
+        <!-- from location-->
+        <label  for="from_location" class="col-sm-2 control-label">You are coming from:</label>
+        <div class="col-sm-10">
+            <input id="from_location" type="text" class="form-control" placeholder="Traveling from? (Imported or Autofilled by system)" >
+        </div>
+    </div><div class="form-group">
+        <!-- to location-->
+        <label  for="to_location" class="col-sm-2 control-label">Traveling to:</label>
+        <div class="col-sm-10">
+            <input id="to_location" type="text" class="form-control" placeholder="Traveling to?" >
+        </div>
+    </div>
+    <div class="form-group">
+        <!-- Beginning date-->
+            <label  for="begin_date" class="col-sm-2 control-label">Beginning Date:</label>
+            <div class="col-sm-10">
+            <!--<p class="input-group">
+                <!--<span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>-->
+                <input id="begin_date" type="date" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened"  datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+           </div>
+    </div><div class="form-group">
+        <!-- Ending date-->
+        <label  for="end_date" class="col-sm-2 control-label">Ending Date:</label>
+        <div class="col-sm-10">
+        
+            <input id="end_date" type="date" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened"  datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+        </div>
+    </div><div class="form-group">
+        <tags-input class="bootstrap"  ng-model="movies"  placeholder="Add a description tag e.g. surfers, bikers, coffee-lovers" replace-spaces-with-dashes="false">
+            <auto-complete source="loadMovies($query)"   min-length="0"  debounce-delay="0"  max-results="10"></auto-complete>
+        </tags-input>
+    </div>
+
+</form>
