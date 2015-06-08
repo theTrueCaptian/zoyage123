@@ -2,6 +2,15 @@
  * Created by mh4047 on 4/28/15.
  */
 var app = angular.module('travel_app',['ui.bootstrap', 'ngTagsInput']);
+app.directive('backImg', function(){
+    return function(scope, element, attrs){
+        var url = attrs.backImg;
+        element.css({
+            'background-image': 'url(' + url +')',
+            'background-size' : 'cover'
+        });
+    };
+});
 app.controller('login_controller', function($scope){
 
 
@@ -14,20 +23,12 @@ app.controller('search_controller', function($scope, $http){
     $scope.curr_search_page_link = "partials/searchform.html";
     /***************************************************/
     //Searching for interesting people tags
-    $scope.movies = [
-        'The Dark Knight',
-        'Heat',
-        'Inception',
-        'The Dark Knight Rises',
-        'Kill Bill: Vol. 1',
-        'Terminator 2: Judgment Day',
-        'The Matrix',
-        'Minority Report',
-        'The Bourne Ultimatum',
+    $scope.people_tags = [
+        'Coffee Lovers'
     ];
 
-    $scope.loadMovies = function(query) {
-        return $http.get('movies.json');
+    $scope.load_people_tags = function(query) {
+        return $http.get('people_kinds.json');
     };
     /***************************************************/
 
