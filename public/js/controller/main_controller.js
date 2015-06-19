@@ -34,12 +34,15 @@ app.controller('search_controller', function($scope, $http){
 
     //Date pickerjs
     $scope.today = function() {
-        $scope.dt = new Date();
+        $scope.begin_date_model = new Date();
+        $scope.end_date_model = new Date();
     };
     $scope.today();
 
     $scope.clear = function () {
-        $scope.dt = null;
+        $scope.begin_date_model = null;
+        $scope.end_date_model = null;
+
     };
 
     // Disable weekend selection

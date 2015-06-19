@@ -1,7 +1,7 @@
 <!-- Decorative tags: http://mbenford.github.io/ngTagsInput/demos.html -->
 <!-- Datepicker: http://plnkr.co/edit/?p=preview -->
 
-<form class="form-horizontal">
+<form class="form-horizontal" action="search" method="POST">
     <div class="form-group">
         <!-- from location-->
         <label  for="from_location" class="col-sm-2 control-label" >You are coming from:</label>
@@ -23,14 +23,14 @@
                 <!--<span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>-->
-                <input id="begin_date" type="date" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened"  datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                <input id="begin_date" type="date" class="form-control" datepicker-popup="{{format}}" ng-model="begin_date_model" is-open="opened"  datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
            </div>
     </div><div class="form-group">
         <!-- Ending date-->
         <label  for="end_date" class="col-sm-2 control-label">Ending Date:</label>
         <div class="col-sm-2">
 
-            <input id="end_date" type="date" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened"  datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+            <input id="end_date" type="date" class="form-control" datepicker-popup="{{format}}" ng-model="end_date_model" is-open="opened"  datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
         </div>
     </div><div class="form-group">
         <label  for="interesting_people_tag" class="col-sm-2 control-label">What kinds of travelers would you like to find:</label>
@@ -38,6 +38,6 @@
             <auto-complete source="load_people_tags($query)"   min-length="0"  debounce-delay="0"  max-results="10"></auto-complete>
         </tags-input>
     </div>
-    <button class="btn btn-primary btn-sm" type="button">Search!</button>
+    <button class="btn btn-primary btn-sm" type="submit" >Search!</button>
 
 </form>
