@@ -19,8 +19,31 @@ app.controller('login_controller', function($scope){
 
 app.controller('search_controller', function($scope, $http){
 
-    $scope.show_progress = false;
-    $scope.curr_search_page_link = "partials/searchform.html";
+    $scope.show_progress            = false;
+    $scope.curr_search_page_link    = "partials/searchform.html";
+    $scope.show_search_form         = true;
+    /***************************************************/
+    //Search button response and initial data
+    $scope.search_input_text = {'from_location_model' : "France", 'to_location_model':"Germany"};
+    /*$scope.begin_date_model
+    $scope.end_date_model
+    $scope.people_tags*/
+    $scope.search  = function(){
+        console.log($scope.search_input_text.from_location_model ,$scope.search_input_text.to_location_model,
+            $scope.begin_date_model,$scope.end_date_model,$scope.people_tags);
+        //Search result
+        $scope.curr_search_page_link    = "partials/searchResult.html";
+        //Show the progress bar
+        $scope.show_progress = true;
+        //Create an http result
+        $http.post('search').success(function(data, status) {
+            $scope.search_results = data;
+            $scope.show_progress = false;
+        }).error(function(data, status) {
+            $scope.search_results = data || "Request failed";
+            $scope.show_progress = false;
+        });
+    };
     /***************************************************/
     //Searching for interesting people tags
     $scope.people_tags = [
@@ -79,8 +102,7 @@ app.controller('search_controller', function($scope, $http){
             {
                 date: tomorrow,
                 status: 'full'
-            },
-            {
+            },{
                 date: afterTomorrow,
                 status: 'partially'
             }
