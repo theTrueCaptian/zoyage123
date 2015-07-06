@@ -24,19 +24,26 @@ app.controller('search_controller', function($scope, $http){
     $scope.show_search_form         = true;
     /***************************************************/
     //Search button response and initial data
-    $scope.search_input_text = {'from_location_model' : "France", 'to_location_model':"Germany"};
-    /*$scope.begin_date_model
-    $scope.end_date_model
-    $scope.people_tags*/
+    $scope.search_input_text = {'from_location_model' : "Kuala Lumpur, Malaysisa", 'to_location_model':"France"};
+
+
     $scope.search  = function(){
-        console.log($scope.search_input_text.from_location_model ,$scope.search_input_text.to_location_model,
+        console.log("Search params:",$scope.search_input_text.from_location_model ,$scope.search_input_text.to_location_model,
             $scope.begin_date_model,$scope.end_date_model,$scope.people_tags);
         //Search result
         $scope.curr_search_page_link    = "partials/searchResult.html";
         //Show the progress bar
         $scope.show_progress = true;
+        //Gather all the info from the form
+        var search_params = {
+            from_location_model : $scope.search_input_text.from_location_model,
+            to_location_model : $scope.search_input_text.to_location_model,
+            begin_date_model : $scope.begin_date_model,
+            end_date_model : $scope.end_date_model,
+            people_tags : $scope.people_tags
+        };
         //Create an http result
-        $http.post('search').success(function(data, status) {
+        $http.post('search', search_params).success(function(data, status) {
             $scope.search_results = data;
             $scope.show_progress = false;
         }).error(function(data, status) {
@@ -44,14 +51,18 @@ app.controller('search_controller', function($scope, $http){
             $scope.show_progress = false;
         });
     };
+    $scope.set_search_form = function(){     //Toggle the search form
+        //$scope.show_search_form = true;
+        $scope.curr_search_page_link    = "partials/searchform.html";
+    }
     /***************************************************/
     //Searching for interesting people tags
     $scope.people_tags = [
         'Coffee Lovers'
     ];
 
-    $scope.load_people_tags = function(query) {
-        return $http.get('people_kinds.json');
+    $scope.load_people_tags = function($query) {
+        return $http.get('search/topk_people_kinds/'+ $query);//$http.get('search/topk_people_kinds');
     };
     /***************************************************/
 
@@ -91,7 +102,7 @@ app.controller('search_controller', function($scope, $http){
     };
 
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-    $scope.format = $scope.formats[0];
+    $scope.format = 'yyyy-MM-dd';//$scope.formats[0]; //date format: [2012-03-28, 2012-04-02]
 
     var tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -108,7 +119,7 @@ app.controller('search_controller', function($scope, $http){
             }
         ];
 
-    $scope.getDayClass = function(date, mode) {
+    /*$scope.getDayClass = function(date, mode) {
         if (mode === 'day') {
             var dayToCheck = new Date(date).setHours(0,0,0,0);
 

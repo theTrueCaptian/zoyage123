@@ -1,8 +1,12 @@
 module.exports = function(db_connection){
+    /*
+    *******************************************************************************
+     */
     // Person e.g. Maeda
     function add_person(name, fblink, callback){
         db_connection.query("INSERT INTO \"Person\" (\"Name\", \"FBLink\") VALUES ($1, $2);", [name, fblink], callback);
     }
+
     function get_person(callback){
         db_connection.query("SELECT * FROM \"Person\"", [], callback);
     }
@@ -13,12 +17,17 @@ module.exports = function(db_connection){
     function delete_person(id, callback){
         db_connection.query("DELETE FROM \"Person\" WHERE \"PersonID\" = $1;", [id], callback);
     }
-
+    /*
+     *******************************************************************************
+     */
     function add_tag(new_tag, callback){                             // Tags e.g. NYUAD students
         db_connection.query("INSERT INTO \"Tag\" (\"TagName\") VALUES ($1);", [new_tag], callback);
     }
     function get_tag(callback){
         db_connection.query("SELECT * FROM \"Tag\"", [], callback);
+    }
+    function get_top_k_tag(substring, callback){    //Used to show suggestions
+        db_connection.query("SELECT \"Tag\".\"TagName\" FROM \"Tag\" WHERE \"Tag\".\"TagName\" LIKE $1 || '%';", [substring], callback);
     }
     function update_tag(id, new_tag_name, callback){ //update by id
         db_connection.query("UPDATE \"Tag\" SET \"TagName\" = $1 WHERE \"TagID\" = $2;", [new_tag_name, id], callback);
@@ -26,6 +35,9 @@ module.exports = function(db_connection){
     function delete_tag(id, callback){  //dete by id
         db_connection.query("DELETE FROM \"Tag\" WHERE \"TagID\" = $1;", [id], callback);
     }
+    /*
+     *******************************************************************************
+     */
     // PeopleTag e.g. NYUAD students == Maeda
     function add_people_tag(tag_id, person_id, callback){
         db_connection.query("INSERT INTO \"PeopleTag\" (\"TagID\", \"PeopleID\") VALUES ($1, $2);", [tag_id, person_id], callback);
@@ -40,7 +52,10 @@ module.exports = function(db_connection){
     function delete_people_tag(tag_id, person_id, callback){
         db_connection.query("DELETE FROM \"PeopleTag\" WHERE \"TagID\" = $1 AND \"PeopleID\" = $2;", [tag_id, person_id], callback);
     }
-    // TravelInfo e.g. Maeda traveled from CT to Abu Dhabi from Jun 1 2014 to Jun 2015
+    /*
+     *******************************************************************************
+     */
+    // TravelInfo e.g. Maeda traveled from CT to Abu Dhabi from Jun 1 2014 to Jun 2015, format: "[2012-03-28,2012-04-03)"
     function add_travel_info(date_duration, person_id, to_location, from_location, callback){
         db_connection.query("INSERT INTO \"TravelInfo\" (\"DateDuration\", \"PersonID\", \"ToLocation\", \"FromLocation\") VALUES ($1, $2, $3, $4);",
             [date_duration, person_id, to_location, from_location], callback);
@@ -55,7 +70,9 @@ module.exports = function(db_connection){
     function delete_travel_info(travel_info_id, callback){ //delete by travel_info_id
         db_connection.query("DELETE FROM \"TravelInfo\" WHERE \"TravelInfoID\" = $1;", [travel_info_id], callback);
     }
-
+    /*
+     *******************************************************************************
+     */
     // Location e.g. Abu Dhabi, Abu Dhabi, UAE
     function add_location_info(location, callback){
         db_connection.query("INSERT INTO \"Location\" (\"Location\") VALUES ($1);", [location], callback);
@@ -70,6 +87,43 @@ module.exports = function(db_connection){
     function delete_location_info(location_id, callback){
         db_connection.query("DELETE FROM \"Location\" WHERE \"LocationID\" = $1;", [location_id], callback);
     }
+    /*
+     *******************************************************************************
+     */
+    //Search
+    function search(tag_name, from_location, to_location, callback){
+
+        var query =
+            "SELECT  * FROM ("+
+            "   SELECT * FROM public.\"PeopleTag\", public.\"Tag\" "+
+            "   WHERE \"PeopleTag\".\"TagID\" = \"Tag\".\"TagID\" "+
+            "   AND \"Tag\".\"TagName\" = $1 "+
+            ") tagtbl,( "+
+            "   SELECT  * FROM "+
+            "   public.\"TravelInfo\", ("+
+            "       select \"Location\".\"LocationID\" as fromlocationid " +
+            "       from public.\"Location\", public.\"TravelInfo\" "+
+            "       where \"Location\".\"LocationID\"=\"TravelInfo\".\"FromLocation\" "+
+            "       and \"Location\".\"Location\"=$2 "+
+            "   ) fromlocation, ("+
+            "       select \"Location\".\"LocationID\" as tolocationid "+
+            "       from public.\"Location\", public.\"TravelInfo\" "+
+            "       where \"Location\".\"LocationID\"=\"TravelInfo\".\"ToLocation\" "+
+            "       and \"Location\".\"Location\"=$3 "+
+            "   ) tolocation "+
+            "   WHERE (\"TravelInfo\".\"FromLocation\"=fromlocationid " +
+            "       OR \"TravelInfo\".\"ToLocation\"=tolocationid)"+
+            ") locationdetailtbl,"+
+            "public.\"Person\" "+
+            "WHERE tagtbl.\"PeopleID\" = \"Person\".\"PersonID\" "+
+            "   AND locationdetailtbl.\"PersonID\" = \"Person\".\"PersonID\";";
+        db_connection.query(query, [tag_name, from_location, to_location], callback);
+
+
+    }
+    /*
+     *******************************************************************************
+     */
     // Test
     function test_insert(){
         var query1 = "INSERT INTO \"Person\" (\"Name\", \"FBLink\") VALUES ('Maeda Hanafi', 'https://www.facebook.com/profile.php?id=100000304317289');";
@@ -102,6 +156,7 @@ module.exports = function(db_connection){
         delete_person:delete_person,
         add_tag:add_tag,
         get_tag:get_tag,
+        get_top_k_tag:get_top_k_tag,
         update_tag:update_tag,
         delete_tag:delete_tag,
         add_people_tag:add_people_tag,
@@ -115,6 +170,7 @@ module.exports = function(db_connection){
         add_location_info:add_location_info,
         get_location_info:get_location_info,
         update_location_info:update_location_info,
-        delete_location_info:delete_location_info
+        delete_location_info:delete_location_info,
+        search:search
     }
 }
